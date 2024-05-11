@@ -18,6 +18,13 @@ export const goods = [
 
 export const App = () => {
   const [selectedGood, setSelectedGood] = useState('Jam');
+  const addGood = good => {
+    setSelectedGood(good);
+  };
+
+  const removeGood = () => {
+    setSelectedGood('');
+  };
 
   return (
     <main className="section container">
@@ -25,40 +32,50 @@ export const App = () => {
         {selectedGood ? `${selectedGood} is selected` : 'No goods selected'}
         {selectedGood && (
           <button
-            onClick={() => setSelectedGood('')}
             data-cy="ClearButton"
             type="button"
             className="delete ml-3"
+            onClick={removeGood}
           />
         )}
       </h1>
+
       <table className="table">
         <tbody>
-          {goods.map(good => {
-            const isSelectedGood = good === selectedGood;
-
-            return (
-              <tr
-                key={good}
-                data-cy="Good"
-                className={isSelectedGood ? 'has-background-success-light' : ''}
-              >
-                <td>
+          {goods.map(good => (
+            <tr
+              key={good}
+              data-cy="Good"
+              className={cn({
+                'has-background-success-light': good === selectedGood,
+              })}
+            >
+              <td>
+                {good === selectedGood ? (
                   <button
-                    data-cy={isSelectedGood ? 'RemoveButton' : 'AddButton'}
+                    data-cy="RemoveButton"
                     type="button"
-                    className={cn('button', { 'is-info': isSelectedGood })}
-                    onClick={() => setSelectedGood(isSelectedGood ? '' : good)}
+                    className="button is-info"
+                    onClick={removeGood}
                   >
-                    {isSelectedGood ? '-' : '+'}
+                    -
                   </button>
-                </td>
-                <td data-cy="GoodTitle" className="is-vcentered">
-                  {good}
-                </td>
-              </tr>
-            );
-          })}
+                ) : (
+                  <button
+                    data-cy="AddButton"
+                    type="button"
+                    className="button"
+                    onClick={() => addGood(good)}
+                  >
+                    +
+                  </button>
+                )}
+              </td>
+              <td data-cy="GoodTitle" className="is-vcentered">
+                {good}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </main>
